@@ -1,3 +1,10 @@
+node_modules/
+dist/
+build/
+*.log
+*.tsbuildinfo
+.env
+frontend/.next
 
 .anchor
 .DS_Store
