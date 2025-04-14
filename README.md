@@ -26,7 +26,10 @@
    # Navigate to the frontend directory (adjust path as needed)
    cd frontend/
 
-   # Install dependencies
+   # Generate the IDL (Interface Description Language) file for your Anchor program
+   node scripts/generate-idl.js
+
+   # Install dependency
    npm install
 
    # Start the development server
