@@ -5,14 +5,16 @@ seeds = false
 skip-lint = false
 
 [programs.localnet]
-encode_tic_tac_toe = "DR5UupfCnFyr28T3CKaVpZr4477Qmn1JhGnUD2jveSLQ"
+encode_tic_tac_toe = "C5zQNGqYy3m7aTB9xrKFLwxY77wC2JKKGccXn5E1qmX5"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
 cluster = "Localnet"
-wallet = "/Users/matejdrazic-balov/.config/solana/id.json"
+wallet = "/Users/cfan/.config/solana/id.json"
+rpc_port = 8900
+faucet_port = 8901
 
 [scripts]
 test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
