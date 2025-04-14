@@ -4,7 +4,10 @@ build/
 *.log
 *.tsbuildinfo
 .env
+<<<<<<< HEAD
 frontend/.next
+=======
+>>>>>>> b9f11fb6de559cdc8062c5162c56d6add3dc1a86
 
 .anchor
 .DS_Store

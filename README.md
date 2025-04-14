@@ -24,7 +24,7 @@
 3. **Run the Frontend**
    ```bash
    # Navigate to the frontend directory (adjust path as needed)
-   cd app/
+   cd frontend/
 
    # Install dependencies
    npm install
