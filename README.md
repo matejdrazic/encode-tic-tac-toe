@@ -14,11 +14,15 @@
 
 2. **Build and Deploy the Anchor Program**
    ```bash
+   # Update wallet dir in Anchor.toml
+
    # Build the program
-   anchor build
+   anchor build or anchor build --arch sbf
 
    # Deploy the program
    anchor deploy
+
+   # Update the program ID in `Anchor.toml`, `lib.rs` and `index.tsx`
    ```
 
 3. **Run the Frontend**
