@@ -1,8 +1,15 @@
+dist/
+build/
+*.log
+*.tsbuildinfo
+.env
+frontend/.next
+frontend/node_modules/
 
 .anchor
 .DS_Store
 target
 **/*.rs.bk
-node_modules
+node_modules/
 test-ledger
 .yarn
