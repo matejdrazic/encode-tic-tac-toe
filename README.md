@@ -31,6 +31,7 @@
 
    # Install dependency
    npm install
+   npx tailwindcss init -p
 
    # Start the development server
    npm run dev

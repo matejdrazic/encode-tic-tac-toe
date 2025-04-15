@@ -38,6 +38,31 @@
         }
       ],
       "args": []
+    },
+    {
+      "name": "makeMove",
+      "accounts": [
+        {
+          "name": "game",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "player",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "row",
+          "type": "u8"
+        },
+        {
+          "name": "col",
+          "type": "u8"
+        }
+      ]
     }
   ],
   "accounts": [
@@ -73,6 +98,10 @@
             "type": {
               "defined": "GameStatus"
             }
+          },
+          {
+            "name": "turn",
+            "type": "publicKey"
           }
         ]
       }
@@ -86,6 +115,9 @@
         "variants": [
           {
             "name": "Waiting"
+          },
+          {
+            "name": "Active"
           },
           {
             "name": "Finished"
@@ -105,5 +137,8 @@
       "name": "PlayerAlreadyJoined",
       "msg": "Player already joined this game"
     }
-  ]
+  ],
+  "metadata": {
+    "address": "C5zQNGqYy3m7aTB9xrKFLwxY77wC2JKKGccXn5E1qmX5"
+  }
 }

@@ -13,6 +13,7 @@ pub mod encode_tic_tac_toe {
         game.player_one = player_one.key();
         game.board = [[0; 3]; 3];  // 0 represents empty cell
         game.status = GameStatus::Waiting;
+        game.turn = player_one.key();  // Player one starts
         
         msg!("New game created by {}", player_one.key());
         Ok(())
@@ -26,8 +27,26 @@ pub mod encode_tic_tac_toe {
         require!(game.player_one != player_two.key(), CustomError::PlayerAlreadyJoined);
 
         game.player_two = player_two.key();
-        game.status = GameStatus::Finished;
+        game.status = GameStatus::Active;
+        
         msg!("Player {} joined the game", player_two.key());
+        Ok(())
+    }
+
+    pub fn make_move(ctx: Context<MakeMove>, row: u8, col: u8) -> Result<()> {
+        let game = &mut ctx.accounts.game;
+        let player = &ctx.accounts.player;
+
+        // Make the move
+        game.board[row as usize][col as usize] = if player.key() == game.player_one { 1 } else { 2 };
+
+        // Update turn
+        game.turn = if player.key() == game.player_one {
+            game.player_two
+        } else {
+            game.player_one
+        };
+
         Ok(())
     }
 }
@@ -51,18 +70,27 @@ pub struct JoinGame<'info> {
     pub player_two: Signer<'info>,
 }
 
+#[derive(Accounts)]
+pub struct MakeMove<'info> {
+    #[account(mut)]
+    pub game: Account<'info, Game>,
+    pub player: Signer<'info>,
+}
+
 #[account]
 pub struct Game {
     player_one: Pubkey,     // 32 bytes
     player_two: Pubkey,     // 32 bytes
     board: [[u8; 3]; 3],    // 9 bytes
     status: GameStatus,     // 1 byte
+    turn: Pubkey,          // 32 bytes - stores the pubkey of whose turn it is
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, PartialEq)]
 pub enum GameStatus {
-    Waiting,
-    Finished,
+    Waiting = 0,
+    Active = 1,
+    Finished = 2,
 }
 
 #[error_code]
@@ -76,6 +104,7 @@ pub enum CustomError {
 impl Game {
     const SPACE: usize = 32 + // player_one
                         32 + // player_two
-                        9 + // board
-                        1;   // status
+                        9 +  // board
+                        1 +  // status
+                        32;  // turn
 }
