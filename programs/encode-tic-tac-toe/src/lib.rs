@@ -1,3 +1,4 @@
+#![allow(unexpected_cfgs)]  //ignore unexpected `cfg` warnings
 use anchor_lang::prelude::*;
 
 declare_id!("C5zQNGqYy3m7aTB9xrKFLwxY77wC2JKKGccXn5E1qmX5");
@@ -36,6 +37,11 @@ pub mod encode_tic_tac_toe {
     pub fn make_move(ctx: Context<MakeMove>, row: u8, col: u8) -> Result<()> {
         let game = &mut ctx.accounts.game;
         let player = &ctx.accounts.player;
+
+        require!(game.status == GameStatus::Active, CustomError::GameNotActive);
+        require!(player.key() == game.turn, CustomError::NotPlayersTurn);
+        require!(row < 3 && col < 3, CustomError::InvalidMove);
+        require!(game.board[row as usize][col as usize] == 0, CustomError::CellOccupied);
 
         // Make the move
         game.board[row as usize][col as usize] = if player.key() == game.player_one { 1 } else { 2 };
@@ -99,6 +105,14 @@ pub enum CustomError {
     GameNotWaiting,
     #[msg("Player already joined this game")]
     PlayerAlreadyJoined,
+    #[msg("The game is not active")]
+    GameNotActive,
+    #[msg("It's not your turn")]
+    NotPlayersTurn,
+    #[msg("Invalid move")]
+    InvalidMove,
+    #[msg("The cell is already occupied. Select another one!")]
+    CellOccupied
 }
 
 impl Game {
