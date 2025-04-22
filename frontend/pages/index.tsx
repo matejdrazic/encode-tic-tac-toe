@@ -285,6 +285,20 @@ export default function Home() {
     }
   };
 
+  const copyToClipboard = (text: string, type: string) => {
+    navigator.clipboard.writeText(text)
+      .then(() => {
+        setStatus(`${type} copied to clipboard!`);
+        setTimeout(() => {
+          setStatus('');
+        }, 2000);
+      })
+      .catch(err => {
+        console.error('Failed to copy:', err);
+        setStatus(`Failed to copy ${type}`);
+      });
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
       <div className="relative py-3 sm:max-w-3xl sm:mx-auto w-full">
@@ -297,6 +311,12 @@ export default function Home() {
                   {keypair && (
                     <div className="text-sm text-gray-600 break-all">
                       Public Key: {keypair.publicKey.toString()}
+                      <button 
+                        onClick={() => copyToClipboard(keypair.publicKey.toString(), 'Public key')}
+                        className="ml-2 bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs py-1 px-2 rounded"
+                      >
+                        Copy
+                      </button>
                     </div>
                   )}
                   <div className="text-center">{status}</div>
@@ -304,6 +324,12 @@ export default function Home() {
                     <div className="space-y-2">
                       <div className="text-sm text-gray-600 break-all">
                         Game Address: {gameAddress || joinGameInput}
+                        <button 
+                          onClick={() => copyToClipboard(gameAddress || joinGameInput, 'Game address')}
+                          className="ml-2 bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs py-1 px-2 rounded"
+                        >
+                          Copy
+                        </button>
                       </div>
                       <div className="text-sm font-semibold text-blue-600">
                         Game Status: {gameStatus}
