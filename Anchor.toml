@@ -6,14 +6,14 @@ seeds = false
 skip-lint = false
 
 [programs.localnet]
-encode_tic_tac_toe = "C5zQNGqYy3m7aTB9xrKFLwxY77wC2JKKGccXn5E1qmX5"
+encode_tic_tac_toe = "BK7T9pvXgFX1zisDETbrrqqsCfZFmW6KKZ9wihwiMFcw"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
 cluster = "Localnet"
-wallet = "/Users/matejdrazic-balov/Desktop/WAZxBTRpkFHmgVQC6T2CAd24Jzdm9YuDxDUK2xhkPoN.json"
+wallet = "/Users/<your_username>/.config/solana/id.json"
 rpc_port = 8900
 faucet_port = 8901
 

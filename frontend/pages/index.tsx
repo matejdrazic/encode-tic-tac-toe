@@ -3,7 +3,7 @@ import { Connection, PublicKey, Keypair, SystemProgram } from '@solana/web3.js';
 import { Program, AnchorProvider } from '@project-serum/anchor';
 import idl from '../idl/encode_tic_tac_toe.json';
 
-const PROGRAM_ID = new PublicKey('C5zQNGqYy3m7aTB9xrKFLwxY77wC2JKKGccXn5E1qmX5');
+const PROGRAM_ID = new PublicKey('BK7T9pvXgFX1zisDETbrrqqsCfZFmW6KKZ9wihwiMFcw');
 
 export default function Home() {
   const [keypair, setKeypair] = useState<Keypair | null>(null);

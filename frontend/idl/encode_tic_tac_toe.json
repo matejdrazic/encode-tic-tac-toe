@@ -102,6 +102,12 @@
           {
             "name": "turn",
             "type": "publicKey"
+          },
+          {
+            "name": "winner",
+            "type": {
+              "option": "publicKey"
+            }
           }
         ]
       }
@@ -120,7 +126,10 @@
             "name": "Active"
           },
           {
-            "name": "Finished"
+            "name": "Win"
+          },
+          {
+            "name": "Draw"
           }
         ]
       }
@@ -136,9 +145,26 @@
       "code": 6001,
       "name": "PlayerAlreadyJoined",
       "msg": "Player already joined this game"
+    },
+    {
+      "code": 6002,
+      "name": "InvalidMove",
+      "msg": "Invalid move coordinates"
+    },
+    {
+      "code": 6003,
+      "name": "NotYourTurn",
+      "msg": "It's not your turn"
+    },
+    {
+      "code": 6004,
+      "name": "CellAlreadyTaken",
+      "msg": "Cell already taken"
+    },
+    {
+      "code": 6005,
+      "name": "GameNotActive",
+      "msg": "Game is not active"
     }
-  ],
-  "metadata": {
-    "address": "C5zQNGqYy3m7aTB9xrKFLwxY77wC2JKKGccXn5E1qmX5"
-  }
+  ]
 }
