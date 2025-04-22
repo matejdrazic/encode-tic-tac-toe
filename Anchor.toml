@@ -13,7 +13,7 @@ url = "https://api.apr.dev"
 
 [provider]
 cluster = "Localnet"
-wallet = "/Users/cfan/.config/solana/id.json"
+wallet = "/Users/matejdrazic-balov/Desktop/WAZxBTRpkFHmgVQC6T2CAd24Jzdm9YuDxDUK2xhkPoN.json"
 rpc_port = 8900
 faucet_port = 8901
 

@@ -40,15 +40,47 @@ pub mod encode_tic_tac_toe {
         // Make the move
         game.board[row as usize][col as usize] = if player.key() == game.player_one { 1 } else { 2 };
 
-        // Update turn
-        game.turn = if player.key() == game.player_one {
-            game.player_two
+        let player_mark = if player.key() == game.player_one { 1 } else { 2 };
+        game.board[row as usize][col as usize] = player_mark;
+
+        // Check for win
+        if is_winner(&game.board, player_mark) {
+            game.status = GameStatus::Win;
+            game.winner = Some(player.key());
+            msg!("Player {} wins!", player.key());
+        } else if is_draw(&game.board) {
+            game.status = GameStatus::Draw;
+            game.winner = None;
+            msg!("Game is a draw!");
         } else {
-            game.player_one
-        };
+            // Update turn
+            game.turn = if player.key() == game.player_one {
+                game.player_two
+            } else {
+                game.player_one
+            };
+        }
 
         Ok(())
     }
+}
+
+fn is_winner(board: &[[u8; 3]; 3], mark: u8) -> bool {
+    for i in 0..3 {
+        // rows and columns
+        if (board[i][0] == mark && board[i][1] == mark && board[i][2] == mark) ||
+           (board[0][i] == mark && board[1][i] == mark && board[2][i] == mark) {
+            return true;
+        }
+    }
+
+    // diagonals
+    (board[0][0] == mark && board[1][1] == mark && board[2][2] == mark) ||
+    (board[0][2] == mark && board[1][1] == mark && board[2][0] == mark)
+}
+
+fn is_draw(board: &[[u8; 3]; 3]) -> bool {
+    board.iter().all(|row| row.iter().all(|&cell| cell != 0))
 }
 
 #[derive(Accounts)]
@@ -84,13 +116,15 @@ pub struct Game {
     board: [[u8; 3]; 3],    // 9 bytes
     status: GameStatus,     // 1 byte
     turn: Pubkey,          // 32 bytes - stores the pubkey of whose turn it is
+    winner: Option<Pubkey>, // 32 bytes - stores the pubkey of the winner
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, PartialEq)]
 pub enum GameStatus {
     Waiting = 0,
     Active = 1,
-    Finished = 2,
+    Win = 2,
+    Draw = 3,
 }
 
 #[error_code]
@@ -99,12 +133,21 @@ pub enum CustomError {
     GameNotWaiting,
     #[msg("Player already joined this game")]
     PlayerAlreadyJoined,
+    #[msg("Invalid move coordinates")]
+    InvalidMove,
+    #[msg("It's not your turn")]
+    NotYourTurn,
+    #[msg("Cell already taken")]
+    CellAlreadyTaken,
+    #[msg("Game is not active")]
+    GameNotActive,
 }
+
 
 impl Game {
     const SPACE: usize = 32 + // player_one
                         32 + // player_two
                         9 +  // board
                         1 +  // status
-                        32;  // turn
+                        32 + 1 + 32;  // turn
 }
