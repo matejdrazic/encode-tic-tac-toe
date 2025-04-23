@@ -285,6 +285,20 @@ export default function Home() {
     }
   };
 
+  const copyToClipboard = (text: string, type: string) => {
+    navigator.clipboard.writeText(text)
+      .then(() => {
+        setStatus(`${type} copied to clipboard!`);
+        setTimeout(() => {
+          setStatus('');
+        }, 2000);
+      })
+      .catch(err => {
+        console.error('Failed to copy:', err);
+        setStatus(`Failed to copy ${type}`);
+      });
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-100 to-blue-100 py-8 flex flex-col justify-center">
       <div className="relative py-3 sm:max-w-3xl sm:mx-auto w-full px-4">
@@ -301,6 +315,12 @@ export default function Home() {
                     <p className="text-sm text-gray-600 break-all">
                       <span className="font-medium text-gray-700">Public Key:</span> {keypair.publicKey.toString()}
                     </p>
+                    <button 
+                        onClick={() => copyToClipboard(keypair.publicKey.toString(), 'Public key')}
+                        className="ml-2 bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs py-1 px-2 rounded"
+                      >
+                        Copy
+                      </button>
                   </div>
                 )}
                 
@@ -318,6 +338,12 @@ export default function Home() {
                     <p className="text-sm font-semibold text-blue-700">
                       <span className="font-medium">Game Status:</span> {gameStatus}
                     </p>
+                    <button 
+                          onClick={() => copyToClipboard(gameAddress || joinGameInput, 'Game address')}
+                          className="ml-2 bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs py-1 px-2 rounded"
+                        >
+                          Copy
+                        </button>
                   </div>
                 )}
                 
