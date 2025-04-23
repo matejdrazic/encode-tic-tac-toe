@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-declare_id!("C5zQNGqYy3m7aTB9xrKFLwxY77wC2JKKGccXn5E1qmX5");
+declare_id!("BK7T9pvXgFX1zisDETbrrqqsCfZFmW6KKZ9wihwiMFcw");
 
 #[program]
 pub mod encode_tic_tac_toe {

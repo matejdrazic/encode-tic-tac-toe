@@ -3,7 +3,7 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 // Run anchor build to generate the IDL
-execSync('anchor build--arch sbf', { stdio: 'inherit' });
+execSync('anchor build --arch sbf', { stdio: 'inherit' });
 
 // Copy the IDL file to the frontend
 const idlPath = path.join(__dirname, '../../target/idl/encode_tic_tac_toe.json');

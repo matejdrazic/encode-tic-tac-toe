@@ -3,7 +3,7 @@ import { Connection, PublicKey, Keypair, SystemProgram } from '@solana/web3.js';
 import { Program, AnchorProvider } from '@project-serum/anchor';
 import idl from '../idl/encode_tic_tac_toe.json';
 
-const PROGRAM_ID = new PublicKey('C5zQNGqYy3m7aTB9xrKFLwxY77wC2JKKGccXn5E1qmX5');
+const PROGRAM_ID = new PublicKey('BK7T9pvXgFX1zisDETbrrqqsCfZFmW6KKZ9wihwiMFcw');
 
 export default function Home() {
   const [keypair, setKeypair] = useState<Keypair | null>(null);
@@ -105,7 +105,8 @@ export default function Home() {
         board: gameAccount.board,
         status: gameAccount.status,
         rawStatus: rawStatus,
-        turn: gameAccount.turn.toString()
+        turn: gameAccount.turn.toString(),
+        winner: gameAccount.winner ? gameAccount.winner.toString() : null
       });
       
       // Create a new array to ensure React detects the change
@@ -115,8 +116,15 @@ export default function Home() {
       // Match raw status byte to enum value
       let status = 'Unknown';
       if (rawStatus === 0) status = 'Waiting';
-      if (rawStatus === 1) status = 'In Progress';
-      if (rawStatus === 2) status = 'Finished';
+      if (rawStatus === 1) status = 'Active';
+      if (rawStatus === 2) {
+        status = 'Game Over';
+        if (gameAccount.winner) {
+          const isWinner = gameAccount.winner.toString() === keypair?.publicKey.toString();
+          status = isWinner ? 'You Win!' : 'You Lose!';
+        }
+      }
+      if (rawStatus === 3) status = 'Draw';
       
       console.log('Interpreted status:', status);
       setGameStatus(status);
@@ -285,6 +293,20 @@ export default function Home() {
     }
   };
 
+  const copyToClipboard = (text: string, type: string) => {
+    navigator.clipboard.writeText(text)
+      .then(() => {
+        setStatus(`${type} copied to clipboard!`);
+        setTimeout(() => {
+          setStatus('');
+        }, 2000);
+      })
+      .catch(err => {
+        console.error('Failed to copy:', err);
+        setStatus(`Failed to copy ${type}`);
+      });
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
       <div className="relative py-3 sm:max-w-3xl sm:mx-auto w-full">
@@ -297,6 +319,12 @@ export default function Home() {
                   {keypair && (
                     <div className="text-sm text-gray-600 break-all">
                       Public Key: {keypair.publicKey.toString()}
+                      <button 
+                        onClick={() => copyToClipboard(keypair.publicKey.toString(), 'Public key')}
+                        className="ml-2 bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs py-1 px-2 rounded"
+                      >
+                        Copy
+                      </button>
                     </div>
                   )}
                   <div className="text-center">{status}</div>
@@ -304,6 +332,12 @@ export default function Home() {
                     <div className="space-y-2">
                       <div className="text-sm text-gray-600 break-all">
                         Game Address: {gameAddress || joinGameInput}
+                        <button 
+                          onClick={() => copyToClipboard(gameAddress || joinGameInput, 'Game address')}
+                          className="ml-2 bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs py-1 px-2 rounded"
+                        >
+                          Copy
+                        </button>
                       </div>
                       <div className="text-sm font-semibold text-blue-600">
                         Game Status: {gameStatus}
@@ -334,9 +368,21 @@ export default function Home() {
                         </button>
                       </div>
                       <div className="text-center mb-4">
-                        {currentTurn === keypair?.publicKey.toString() 
-                          ? "Your turn!" 
-                          : "Opponent's turn"}
+                        {gameStatus === 'Active' ? 
+                          (currentTurn === keypair?.publicKey.toString() 
+                            ? "Your turn!" 
+                            : "Opponent's turn")
+                          : (
+                            <span className={`text-xl font-bold ${
+                              gameStatus === 'You Win!' ? 'text-green-600' :
+                              gameStatus === 'You Lose!' ? 'text-red-600' :
+                              gameStatus === 'Draw' ? 'text-yellow-600' :
+                              'text-blue-600'
+                            }`}>
+                              {gameStatus}
+                            </span>
+                          )
+                        }
                       </div>
                       <div className="inline-grid grid-cols-3 gap-2">
                         {board.map((row, i) =>
@@ -345,7 +391,7 @@ export default function Home() {
                               key={`${i}-${j}`}
                               className="w-24 h-24 border-4 border-gray-800 bg-white hover:bg-gray-50 flex items-center justify-center text-5xl font-bold"
                               onClick={() => makeMove(i, j)}
-                              disabled={cell !== 0} // Also prevent moves on non-empty cells
+                              disabled={cell !== 0 || gameStatus !== 'Active'} // Disable when game is over or cell is not empty
                             >
                               {cell === 0 ? '' : cell === 1 ? 'X' : 'O'}
                             </button>
